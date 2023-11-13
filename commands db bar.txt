@@ -1,6 +1,6 @@
 create database bar;
 use bar;
-create table admins (usuario varchar(255), pswd varchar(255));
+create table admins (id_admin int auto_increment primary key, usuario varchar(255), pswd varchar(255));
 describe admins;
 create table bebidas (id_bebida int auto_increment primary key, nombre varchar(255), descripcion varchar(255), tipo varchar(255), precio float);
 describe bebidas;
@@ -31,4 +31,12 @@ create view bebidas_con_alcohol as
 	select * from bebidas where tipo = "con alcohol";
 select * from bebidas_con_alcohol;
 drop view if exists bebidas_sin_alcohol;
+
+create procedure buscar_receta(in bebida varchar(255))
+	select b.nombre as nombre, i.nombre as ingrediente, r.cantidad, r.unidad
+	from recetas as r
+	join bebidas as b on r.fk_bebida = b.id_bebida
+	join ingredientes as i on r.fk_ingrediente = i.id_ingrediente
+	where b.nombre = bebida;
+
 
