@@ -1,0 +1,34 @@
+create database bar;
+use bar;
+create table admins (usuario varchar(255), pswd varchar(255));
+describe admins;
+create table bebidas (id_bebida int auto_increment primary key, nombre varchar(255), descripcion varchar(255), tipo varchar(255), precio float);
+describe bebidas;
+create table ingredientes (id_ingrediente int auto_increment primary key, nombre varchar(255));
+describe ingredientes;
+create table recetas (id_receta int auto_increment primary key, fk_bebida int, fk_ingrediente int, cantidad float, unidad varchar(255), foreign key(fk_bebida) references bebidas(id_bebida), foreign key(fk_ingrediente) references ingredientes(id_ingrediente));
+describe recetas;
+insert into admins (usuario, pswd) values ('hanzeel', '1234');
+select * from admins;
+insert into ingredientes (nombre) values ("limon"), ("sal"), ("salsas negras"), ("vino"), ("agua mineral"), ("jugo de naranja"), ("cerveza"), ("tequila"), ("refresco de toronja"), ("sangrita"), ("controy"), ("jarabe");
+select * from ingredientes;
+insert into bebidas (nombre, tipo, precio) values ("michelada", "con alcohol", 60), ("naranjada", "sin alcohol", 30), ("limonada", "sin alcohol", 30), ("clericot", "con alcohol", 80), ("vampiro", "con alcohol", 100);
+select * from bebidas;
+insert into recetas (fk_bebida, fk_ingrediente, cantidad, unidad) values (1, 1, .5, "cucharadas");
+insert into recetas (fk_bebida, fk_ingrediente, cantidad, unidad) values (1, 2, 2, "oz");
+insert into recetas (fk_bebida, fk_ingrediente, cantidad, unidad) values (1, 3, .5, "oz");
+insert into recetas (fk_bebida, fk_ingrediente, cantidad, unidad) values (1, 7, 1, "l");
+select * from recetas;
+CREATE PROCEDURE obtenerCategoria(IN categoria varchar(255))
+	SELECT * FROM bebidas WHERE tipo = categoria;
+call obtenerCategoria("con alcohol");
+call obtenerCategoria("sin alcohol");
+drop procedure if exists obtenerCategoria;
+create view bebidas_sin_alcohol as
+	select * from bebidas where tipo = "sin alcohol";
+select * from bebidas_sin_alcohol;
+create view bebidas_con_alcohol as
+	select * from bebidas where tipo = "con alcohol";
+select * from bebidas_con_alcohol;
+drop view if exists bebidas_sin_alcohol;
+
