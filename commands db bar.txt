@@ -34,9 +34,7 @@ drop view if exists bebidas_sin_alcohol;
 
 create procedure buscar_receta(in bebida varchar(255))
 	select b.nombre as nombre, i.nombre as ingrediente, r.cantidad, r.unidad
-	from recetas as r
-	join bebidas as b on r.fk_bebida = b.id_bebida
-	join ingredientes as i on r.fk_ingrediente = i.id_ingrediente
+	from recetas r
+	join bebidas b on r.fk_bebida = b.id_bebida
+	join ingredientes i on r.fk_ingrediente = i.id_ingrediente
 	where b.nombre = bebida;
-
-

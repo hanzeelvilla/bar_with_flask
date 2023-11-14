@@ -1,23 +1,27 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_mysql_connector import MySQL 
+from flask_mysql_connector import MySQL
+import mysql.connector
 from flask_login import UserMixin, login_user, logout_user, LoginManager, login_required
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'SiNoPongoAgoLaAppSeCrasheaXD'
 
 # ------------------- Conección con la base de datos mySQL ------------------- #
-app.config['SECRET_KEY'] = 'hola'
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'hanzeelSQL1234'
-app.config['MYSQL_DB'] = 'bar'
+db = mysql.connector.connect( 
+    host = "localhost",
+    user = "root",
+    password = "hanzeelSQL1234",
+    database = "bar"
+)
 
-mysql = MySQL(app)
+cursor = db.cursor(dictionary=True)
 
 class Admins(UserMixin):
     def __init__(self, usuario, pswd):
         self.usuario = usuario
         self.pswd = pswd
     
+    #Función necesaria para llamar la bd NO QUITAR
     def get_id(self):
         return str(self.usuario)
 
@@ -40,11 +44,8 @@ def login():
     if request.method == 'POST':
         user = request.form['user']
         pswd = request.form['pswd']
-        cursor = mysql.connection.cursor(dictionary=True)
-        cursor.execute(f"USE {app.config['MYSQL_DB']}")
         cursor.execute(f"SELECT * FROM admins WHERE usuario = '{user}' AND pswd = '{pswd}'")
         user_data = cursor.fetchone()
-        cursor.close()
         if user_data:
             user = Admins(user_data['usuario'], user_data['pswd'])
             login_user(user)
